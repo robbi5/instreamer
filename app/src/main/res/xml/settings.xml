@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:title="@string/app_name">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="start_after_boot"
+        android:title="Start streaming after boot" />
+
+    <EditTextPreference android:title="FFMPEG command"
+        android:key="ffmpeg_cmd"
+        android:summary=""
+        android:defaultValue="ffmpeg -i - -c copy -bsf:a aac_adtstoasc -f flv rtmp://192.168.1.55:1935/live/hdmi" />
+
+    <ListPreference android:title="Video bitrate (kBps)"
+        android:key="videoBitrate"
+        android:summary=""
+        android:defaultValue="0"
+        android:entries="@array/bitrateHuman"
+        android:entryValues="@array/bitrate" />
+
+    <EditTextPreference android:title="Video framerate"
+        android:key="videoFramerate"
+        android:numeric="integer"
+        android:summary=""
+        android:defaultValue="30" />
+
+    <ListPreference android:title="Video size"
+        android:key="videoSize"
+        android:defaultValue="0"
+        android:entries="@array/listVideoSizesHuman"
+        android:entryValues="@array/listVideoSizes" />
+
+    <ListPreference android:title="Audio bitrate (kBps)"
+        android:key="audioBitrate"
+        android:numeric="integer"
+        android:summary=""
+        android:defaultValue="44100"
+        android:entries="@array/samplerateHuman"
+        android:entryValues="@array/samplerate" />
+
+    <ListPreference android:title="Audio Channels"
+        android:key="audioChannels"
+        android:numeric="integer"
+        android:summary=""
+        android:defaultValue="2"
+        android:entries="@array/channelsHuman"
+        android:entryValues="@array/channels" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="displayLog"
+        android:title="Overlay log messages" />
+
+</PreferenceScreen>

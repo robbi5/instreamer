@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".layout.MainFragment">
+
+  <SurfaceView
+    android:id="@+id/surfaceView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true" />
+
+  <TextView
+    android:id="@+id/noSignalTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="@string/hdmi_no_signal"
+    android:textColor="@android:color/white"
+    android:textSize="24sp" />
+
+  <ScrollView
+    android:id="@+id/scrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:scrollbars="vertical">
+
+    <TextView
+      android:id="@+id/textView"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:layout_weight="1.0"
+      android:textColor="#ffffffff"
+      android:textSize="10sp" />
+
+  </ScrollView>
+
+  <ImageView
+    android:id="@+id/recordingImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|right"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="20dp"
+    android:contentDescription="Recording"
+    android:padding="5dp"
+    android:src="@android:drawable/presence_video_busy"
+    android:visibility="invisible" />
+
+</FrameLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="listVideoSizesHuman">
+        <item>1920x1080</item>
+        <item>1280x720</item>
+        <item>720x576</item>
+        <item>720x480</item>
+        <item>640x368</item>
+    </string-array>
+    <string-array name="listVideoSizes">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="bitrateHuman">
+        <item>10M</item>
+        <item>9M</item>
+        <item>6M</item>
+        <item>5M</item>
+        <item>3M</item>
+        <item>1.5M</item>
+        <item>1M</item>
+    </string-array>
+    <string-array name="bitrate">
+        <item>10000000</item>
+        <item>9000000</item>
+        <item>6000000</item>
+        <item>5000000</item>
+        <item>3000000</item>
+        <item>1500000</item>
+        <item>1000000</item>
+    </string-array>
+
+    <string-array name="samplerateHuman">
+        <item>96000</item>
+        <item>48000</item>
+        <item>44100</item>
+        <item>32000</item>
+        <item>22050</item>
+        <item>11025</item>
+        <item>8000</item>
+    </string-array>
+    <string-array name="samplerate">
+        <item>96000</item>
+        <item>48000</item>
+        <item>44100</item>
+        <item>32000</item>
+        <item>22050</item>
+        <item>11025</item>
+        <item>8000</item>
+    </string-array>
+
+    <string-array name="channelsHuman">
+        <item>2 (Stereo)</item>
+        <item>1 (Mono)</item>
+    </string-array>
+    <string-array name="channels">
+        <item>2</item>
+        <item>1</item>
+    </string-array>
+</resources>
