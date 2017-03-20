@@ -28,11 +28,22 @@ android {
 
     vectorDrawables.useSupportLibrary = true
   }
+
+  signingConfigs {
+    release {
+      storeFile file('../keystore.jks')
+      storePassword instreamer_keystore_password
+      keyAlias instreamer_key_alias
+      keyPassword instreamer_key_password
+    }
+  }
+
   buildTypes {
     release {
       minifyEnabled false
       shrinkResources false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
     }
   }
 }

@@ -1,0 +1,22 @@
+language: android
+sudo: false
+jdk: oraclejdk8
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-25.0.2
+  - android-25
+  - extra-android-m2repository
+script: "./gradlew build check"
+before_install:
+  - openssl aes-256-cbc -K $encrypted_091969153863_key -iv $encrypted_091969153863_iv -in keystore.jks.enc -out keystore.jks -d
+deploy:
+  provider: releases
+  api_key:
+    secure: i0LjX+lYG0ZlqYxpBsmdWSZb8u4lzv9/IduFvlFIUzzHXZoa56WZd/jfsu0k0tMxTmTLXJBw4D2LIZgLrRL53+SRq+mQPsLopcUvqUeZhyq7Q5eRk3KG4XCBJkqqOtYHG7CLrLemPKIeb1f4soqITpVVUA58AzCE0zZXGyJBGuwyHaQkB0grkfqiZjs5jJ9hOH0+pu/spikPL8pzpac1BC/jqbhYLxAFrE4qYgi9UeMQM38x8Qo4PHR8jSgUdeQVCHuHkBCCoAolL4h9qr1cNG2R7B9/h9HQz4Fx3WNwHuO6wZ3HMBX9+G+/paaPORCWAu7GL47hnP9DcnjETqQKMFaslFfVv4nRFKJZi5HcKLIqL0aPHzko8pS+ynwa7iF3UHYAZJGEs05RDZtcWQhlLgdsQqF57wNYoiCcDyNDPa3ArntvPENgiJOK13Km8M0Rusn3ca/PVLHk+DAadGLI0JoPwLlXllvLgj3HVe0b5m3FXwqQ0DjwWU5LEnYzDuny33wkYvyrhDvZ/CxE+08O5Xty7JesyrCph/bhDKOhso+9d6pDVS7bDngOaRlc+b1nnvParJTQ6pC85JikNaeiCV4/wbe0hU7a6UVKs3RUp1flhkBCswz5IWAQVDhujs9MR6p7r+mQSohdOC9bAitktnGwXYjq3gVcUHr+oLBfp9I=
+  file: app/build/outputs/apk/instreamer-*-release.apk
+  file_glob: true
+  on:
+    repo: robbi5/instreamer
+    tags: true
