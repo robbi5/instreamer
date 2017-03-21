@@ -1,15 +1,19 @@
 package com.robbi5.instreamer.layout;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -37,6 +41,7 @@ public class MainFragment extends Fragment {
   public static final String STREAM_ACTIVITY_INTENT = BuildConfig.APPLICATION_ID + ".STREAM_ACTIVITY_INTENT";
   public static final String EXTRA_SURFACE = BuildConfig.APPLICATION_ID + ".SURFACE";
   public static final String EXTRA_TOGGLE_STREAMING = BuildConfig.APPLICATION_ID + ".TOGGLE_STREAMING";
+  public static final int PERMISSIONS_RESPONSE = 42;
 
   SharedPreferences preferences;
   SharedPreferences.OnSharedPreferenceChangeListener preferencesChangeListener;
@@ -86,6 +91,11 @@ public class MainFragment extends Fragment {
       preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
+    // halt startup if we don't have all needed permissions
+    if (!checkPermissions()) {
+      return;
+    }
+
     if (hdmiSurfaceHolderCallback == null) {
       hdmiSurfaceHolderCallback = new HdmiSurfaceHolderCallback();
       surfaceHolder.addCallback(hdmiSurfaceHolderCallback);
@@ -124,6 +134,41 @@ public class MainFragment extends Fragment {
 
     // Don't call, that happens with hdmiHotplugReceiver already
     // checkHdmiReady();
+  }
+
+  public boolean checkPermissions() {
+    String[] requiredPermissions = new String[]{
+      Manifest.permission.INTERNET,
+      Manifest.permission.CAMERA,
+      Manifest.permission.RECORD_AUDIO,
+      Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
+    boolean shouldAskForPermissions = false;
+    for (String requiredPermission : requiredPermissions) {
+      if (ContextCompat.checkSelfPermission(getActivity(), requiredPermission) != PackageManager.PERMISSION_GRANTED) {
+        shouldAskForPermissions = true;
+        break;
+      }
+    }
+
+    if (!shouldAskForPermissions) {
+      return true;
+    }
+
+    ActivityCompat.requestPermissions(getActivity(), requiredPermissions, PERMISSIONS_RESPONSE);
+    return false;
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    if (requestCode != PERMISSIONS_RESPONSE) {
+      return;
+    }
+
+    if (grantResults.length > 0  && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // try again to start:
+      onStart();
+    }
   }
 
   @Override
