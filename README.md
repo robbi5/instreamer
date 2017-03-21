@@ -2,7 +2,7 @@
 Android TV app for streaming HDMI input of Zidoo X9S and Zidoo X8 compatible TV boxes with ffmpeg.
 
 ## Installation
-* Copy .apk from releases to your device and install it.
+* Copy [.apk from releases](https://github.com/robbi5/instreamer/releases) to your device and install it.
 * Copy [ffmpeg binary](https://github.com/WritingMinds/ffmpeg-android/releases) to `/mnt/sdcard/`
 
 ## Running
