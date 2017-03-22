@@ -43,6 +43,10 @@ public class MainFragment extends Fragment {
   public static final String EXTRA_TOGGLE_STREAMING = BuildConfig.APPLICATION_ID + ".TOGGLE_STREAMING";
   public static final int PERMISSIONS_RESPONSE = 42;
 
+  public static final int MODE_NO_SIGNAL = 0;
+  public static final int MODE_PREVIEW = 1;
+  public static final int MODE_STREAMING = 2;
+
   SharedPreferences preferences;
   SharedPreferences.OnSharedPreferenceChangeListener preferencesChangeListener;
 
@@ -60,7 +64,8 @@ public class MainFragment extends Fragment {
   RtkHDMIRxManager hdmiRxManager;
 
   Intent service = null;
-  boolean isPlaying = false;
+  int mode = MODE_NO_SIGNAL;
+  int lastMode = MODE_NO_SIGNAL;
 
   public MainFragment() {}
 
@@ -192,8 +197,9 @@ public class MainFragment extends Fragment {
       checkHdmiReadyHandler = null;
     }
     if (hdmiRxManager != null) {
-      if (isPlaying) {
+      if (mode == MODE_PREVIEW) {
         hdmiRxManager.stop();
+        mode = MODE_NO_SIGNAL;
       }
       hdmiRxManager.release();
       hdmiRxManager = null;
@@ -212,7 +218,7 @@ public class MainFragment extends Fragment {
 
   public synchronized void checkHdmiReady() {
     checkHdmiReadyHandler.removeMessages(CHECK_HDMI_MSG);
-    if (isPlaying) {
+    if (mode == MODE_PREVIEW) {
       return;
     }
     if (hdmiSurfaceHolderCallback != null && !hdmiSurfaceHolderCallback.isReady()) {
@@ -233,7 +239,7 @@ public class MainFragment extends Fragment {
       return;
     }
 
-    if (preferences.getBoolean("start_after_boot", false)) {
+    if (preferences.getBoolean("start_after_boot", false) || lastMode == MODE_STREAMING) {
       startStreaming();
     } else {
       startPreview();
@@ -241,7 +247,7 @@ public class MainFragment extends Fragment {
   }
 
   private void startPreview() {
-    if (isPlaying) {
+    if (mode == MODE_PREVIEW) {
       stopPreview();
       checkHdmiReadyHandler.sendEmptyMessageDelayed(CHECK_HDMI_MSG, 500);
       return;
@@ -253,17 +259,17 @@ public class MainFragment extends Fragment {
         StreamService.buildVideoConfigFromSettings(preferences),
         StreamService.buildAudioConfigFromSettings(preferences));
       hdmiRxManager.play();
-      isPlaying = true;
+      mode = MODE_PREVIEW;
     } catch (IOException e) {
-      isPlaying = false;
+      mode = MODE_NO_SIGNAL;
     }
   }
 
   private void stopPreview() {
-    if (hdmiRxManager != null && isPlaying) {
+    if (hdmiRxManager != null && mode == MODE_PREVIEW) {
       hdmiRxManager.stop();
     }
-    isPlaying = false;
+    mode = MODE_NO_SIGNAL;
   }
 
   private void startStreaming() {
@@ -283,6 +289,7 @@ public class MainFragment extends Fragment {
     getActivity().startService(service);
 
     recordingImageView.setVisibility(View.VISIBLE);
+    mode = MODE_STREAMING;
   }
 
   private void stopStreaming() {
@@ -290,6 +297,7 @@ public class MainFragment extends Fragment {
       getActivity().stopService(service);
       service = null;
       recordingImageView.setVisibility(View.INVISIBLE);
+      mode = MODE_NO_SIGNAL;
     }
   }
 
@@ -328,6 +336,12 @@ public class MainFragment extends Fragment {
     public void onReceive(Context context, Intent intent) {
       if (!intent.getBooleanExtra(RtkHDMIService.EXTRA_HDMI_PLUGGED_STATE, false)) {
         noSignalTextView.setVisibility(View.VISIBLE);
+        lastMode = mode;
+        if (mode == MODE_PREVIEW) {
+          stopPreview();
+        } else if (mode == MODE_STREAMING) {
+          stopStreaming();
+        }
         return;
       }
 
